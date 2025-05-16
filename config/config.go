@@ -1,9 +1,8 @@
 package config
 
 import (
-	"log"
-
 	"github.com/spf13/viper"
+	"log"
 )
 
 type Config struct {
@@ -11,13 +10,27 @@ type Config struct {
 	DBSource  string
 	Port      string
 	JWTSecret string
+	RedisHost string
+	RedisPort string
+	RedisPass string
 }
 
 func LoadConfig() Config {
-	viper.SetConfigFile(".env")
+	viper.SetConfigName(".env")
+	viper.SetConfigType("env")
+	viper.AddConfigPath(".")  // current dir (misal saat run dari main.go)
+	viper.AddConfigPath("..") // parent dir (saat test di subfolder)
 	viper.AutomaticEnv()
+
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+		log.Println("Warning: .env not found, trying .env.test")
+		viper.SetConfigName(".env.test")
+		viper.SetConfigType("env")
+		viper.AddConfigPath(".")
+		viper.AddConfigPath("..") // <--- ini penting untuk test
+		if err := viper.ReadInConfig(); err != nil {
+			log.Fatalf("Failed to load config file: %v", err)
+		}
 	}
 
 	return Config{
@@ -25,5 +38,8 @@ func LoadConfig() Config {
 		DBSource:  viper.GetString("DB_SOURCE"),
 		Port:      viper.GetString("PORT"),
 		JWTSecret: viper.GetString("JWT_SECRET"),
+		RedisHost: viper.GetString("REDIS_HOST"),
+		RedisPort: viper.GetString("REDIS_PORT"),
+		RedisPass: viper.GetString("REDIS_PASS"),
 	}
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/aronipurwanto/go-api-northwind/config"
 	"github.com/aronipurwanto/go-api-northwind/controllers"
 	"github.com/aronipurwanto/go-api-northwind/repositories"
@@ -11,6 +12,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 
+	redisClient "github.com/aronipurwanto/go-api-northwind/internal/redis"
 	"github.com/gofiber/swagger"
 )
 
@@ -21,15 +23,23 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to connect to DB: ", err)
 	}
+	log.Println("Connected to DB")
+
+	redis := redisClient.NewRedisClient(cfg.RedisHost, cfg.RedisPort, cfg.RedisPass)
+	pong, err := redis.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatal("Failed to connect to Redis:", err)
+	}
+	log.Println("Connected to Redis:", pong)
 
 	empRepo := repositories.NewEmployeeRepository(db)
 	empService := services.NewEmployeeService(empRepo)
 	empController := controllers.NewEmployeeController(empService)
 
-	app := fiber.New()
-	authController := controllers.NewAuthController(db, cfg)
+	authRepo := repositories.NewAuthRepository(db)
+	authService := services.NewAuthService(authRepo, cfg.JWTSecret, redis)
+	authController := controllers.NewAuthController(authService)
 
-	// inisialisasi repo, service, controller
 	categoryRepo := repositories.NewCategoryRepository(db)
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryController := controllers.NewCategoryController(categoryService)
@@ -42,8 +52,9 @@ func main() {
 	orderService := services.NewOrderService(orderRepo)
 	orderController := controllers.NewOrderController(orderService)
 
-	routes.SetupRoutes(app, cfg, authController, empController, categoryController, productController, orderController)
+	app := fiber.New()
 
+	// Swagger info
 	// @title Northwind API
 	// @version 1.0
 	// @description REST API for Northwind orders
@@ -52,6 +63,8 @@ func main() {
 	// @name Authorization
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
+
+	routes.SetupRoutes(app, cfg, redis, authController, empController, categoryController, productController, orderController)
 
 	log.Fatal(app.Listen(":" + cfg.Port))
 }

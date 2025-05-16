@@ -10,7 +10,7 @@ type OrderService interface {
 	GetAll(page, limit int) ([]models.Order, int64, error)
 	GetByID(id int) (*models.Order, []models.OrderDetail, error)
 	Update(id int, order *models.Order, details []models.OrderDetail) (*models.Order, error)
-	Delete(id int) errors
+	Delete(id int) error
 }
 
 type orderService struct {

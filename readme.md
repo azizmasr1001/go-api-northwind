@@ -20,6 +20,8 @@ A lightweight REST API for the Northwind sample database using:
 - go get github.com/swaggo/swag/cmd/swag
 - go get github.com/golang-jwt/jwt/v5
 - go get github.com/gofiber/jwt/v3
+- go get github.com/redis/go-redis/v9
+- go get github.com/stretchr/testify
 ---
 
 ## 📁 Project Structure
