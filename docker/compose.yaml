@@ -1,0 +1,23 @@
+version: '3'
+services:
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    restart: always
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
+    driver: local

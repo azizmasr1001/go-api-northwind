@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/aronipurwanto/go-api-northwind/models"
-	"github.com/aronipurwanto/go-api-northwind/services"
-	"github.com/aronipurwanto/go-api-northwind/utils"
+	"github.com/azizmasr1001/go-api-northwind/models"
+	"github.com/azizmasr1001/go-api-northwind/services"
+	"github.com/azizmasr1001/go-api-northwind/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"

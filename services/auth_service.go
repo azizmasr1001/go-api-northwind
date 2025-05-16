@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aronipurwanto/go-api-northwind/internal/redis"
-	"github.com/aronipurwanto/go-api-northwind/models"
-	"github.com/aronipurwanto/go-api-northwind/repositories"
+	"github.com/azizmasr1001/go-api-northwind/internal/redis"
+	"github.com/azizmasr1001/go-api-northwind/models"
+	"github.com/azizmasr1001/go-api-northwind/repositories"
 	"github.com/golang-jwt/jwt/v5"
 	redislib "github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
@@ -68,6 +68,7 @@ func (s *AuthServiceImpl) Register(ctx context.Context, input *models.RegisterRe
 		PasswordHash: string(hashed),
 		IsActive:     true,
 		Role:         "user",
+		EmployeeID:   input.EmployeeID,
 	}
 
 	if err := s.repo.CreateUser(user); err != nil {

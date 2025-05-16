@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/aronipurwanto/go-api-northwind/models"
-	"github.com/aronipurwanto/go-api-northwind/repositories"
+	"github.com/azizmasr1001/go-api-northwind/models"
+	"github.com/azizmasr1001/go-api-northwind/repositories"
 )
 
 type EmployeeService interface {

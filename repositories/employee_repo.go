@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/aronipurwanto/go-api-northwind/models"
+	"github.com/azizmasr1001/go-api-northwind/models"
 	"gorm.io/gorm"
 )
 
